@@ -25,6 +25,16 @@
     <!-- EmailJS para envío de correos -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
+    <!-- Verificar EmailJS -->
+    <script>
+        console.log('EmailJS loading...');
+        if (typeof emailjs !== 'undefined') {
+            console.log('EmailJS loaded successfully');
+        } else {
+            console.error('EmailJS failed to load');
+        }
+    </script>
+    
     <!-- AOS para animaciones -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
@@ -2360,6 +2370,24 @@
                             <i class="fas fa-arrow-left mr-2"></i>Volver al Login
                         </a>
                     </p>
+                </div>
+            </div>
+            
+            <!-- Password Reset Success Form -->
+            <div id="passwordResetSuccess" class="auth-form hidden">
+                <div class="text-center mb-8">
+                    <div class="mb-4">
+                        <i class="fas fa-check-circle text-6xl" style="color: #10b981;"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold mb-2" style="color: var(--text-primary);">Email Enviado</h2>
+                    <p style="color: var(--text-secondary);">Revisa tu bandeja de entrada y sigue las instrucciones</p>
+                </div>
+                
+                <div class="text-center mt-6">
+                    <button onclick="showLoginForm()" class="w-full py-3 rounded-lg font-semibold transition-all duration-300"
+                            style="background: linear-gradient(135deg, var(--accent-color) 0%, #cc0000 100%); color: white;">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Volver al Login
+                    </button>
                 </div>
             </div>
             

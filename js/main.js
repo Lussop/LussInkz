@@ -183,7 +183,10 @@ function initializeApp() {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
         document.body.classList.add('dark-mode');
-        document.getElementById('themeToggle').classList.add('active');
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            themeToggle.classList.add('active');
+        }
     }
     
     // Set initial active state for "Todos" button
@@ -229,12 +232,14 @@ function setupEventListeners() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+            const href = this.getAttribute('href');
+            if (href && href !== '#') {
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
             }
         });
     });
@@ -1033,6 +1038,37 @@ function scrollToProducts() {
 // Authentication System
 let currentUser = null;
 let users = JSON.parse(localStorage.getItem('lussinkz_users')) || [];
+
+// Add some test users if empty
+if (users.length === 0) {
+    console.log('📝 No hay usuarios, creando usuarios de prueba...');
+    users = [
+        {
+            id: 1,
+            name: 'Usuario',
+            surname: 'Prueba',
+            email: 'test@email.com',
+            password: '123456',
+            phone: '2995123456',
+            role: 'user',
+            isActive: true,
+            registeredAt: new Date().toISOString()
+        },
+        {
+            id: 2,
+            name: 'LussInkz',
+            surname: 'Admin',
+            email: 'admin@lussinkz.com',
+            password: 'admin123',
+            phone: '2995987654',
+            role: 'admin',
+            isActive: true,
+            registeredAt: new Date().toISOString()
+        }
+    ];
+    localStorage.setItem('lussinkz_users', JSON.stringify(users));
+    console.log('✅ Usuarios de prueba creados:', users);
+}
 let orders = JSON.parse(localStorage.getItem('lussinkz_orders')) || [];
 let messages = JSON.parse(localStorage.getItem('lussinkz_messages')) || [];
 
@@ -1079,9 +1115,26 @@ function showPasswordReset() {
 }
 
 function handlePasswordReset(event) {
+    console.log('🚀 handlePasswordReset called!');
+    console.log('📧 Event object:', event);
+    
     event.preventDefault();
+    console.log('✅ Event prevented');
+    
+    // Mostrar usuarios actuales en consola
+    console.log('👥 Usuarios actuales en LocalStorage:', users);
+    console.log('📊 Total de usuarios:', users.length);
     
     const email = document.getElementById('resetEmail').value;
+    console.log('📧 Email from form:', email);
+    
+    if (!email) {
+        console.error('❌ Email is empty');
+        showNotification('Por favor ingresa tu email', 'error');
+        return;
+    }
+    
+    console.log('👤 Looking for user with email:', email);
     
     // Check if user exists
     const user = users.find(u => u.email === email);
@@ -1099,33 +1152,42 @@ function handlePasswordReset(event) {
         // Create reset link
         const resetLink = `${window.location.origin}${window.location.pathname}?token=${resetToken}`;
         
-        // Send email using EmailJS
-        emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+        // Email template data
+        const templateParams = {
             to_email: email,
-            to_name: user.name,
-            reset_link: resetLink,
-            from_name: "LussInkz"
-        })
-        .then(function(response) {
-            console.log("Email enviado!", response.status, response.text);
-            showNotification(`Se ha enviado un enlace de recuperación a ${email}. Revisa tu bandeja de entrada.`, 'success');
+            to_name: user.name || "Cliente",
+            email: email,
+            link: resetLink,
+            company_name: "LussInkz",
+            website_link: window.location.origin,
+            logo_url: "https://i.imgur.com/ZzKvOsx.png"
+        };
+        
+        // Send email using EmailJS
+        if (typeof emailjs !== 'undefined') {
+            console.log('Enviando email con los siguientes parámetros:', templateParams);
+            console.log('Service ID: service_w8p6kjj');
+            console.log('Template ID: template_lnm3nafc');
             
-            // Go back to login
-            setTimeout(() => {
-                showLoginForm();
-            }, 2000);
-        }, function(error) {
-            console.log("Error enviando email:", error);
-            
-            // Fallback: show link in console and notification
-            console.log(`DEMO: Enlace de reset: ${resetLink}`);
-            showNotification(`Se ha generado un enlace de recuperación. Revisa la consola (F12) para obtener el enlace de demostración.`, 'info');
-            
-            // Go back to login
-            setTimeout(() => {
-                showLoginForm();
-            }, 3000);
-        });
+            emailjs.send("service_w8p6kjj", "template_lnm3nafc", templateParams)
+            .then(function(response) {
+                console.log("✅ Email enviado exitosamente!", response.status, response.text);
+                showPasswordResetSuccess();
+            }, function(error) {
+                console.error("❌ Error enviando email:", error);
+                console.error("Error details:", error.text || error.message);
+                
+                // Fallback: show link in console and notification
+                console.log(`📋 DEMO: Enlace de reset: ${resetLink}`);
+                showNotification(`Se ha generado un enlace de recuperación. Revisa la consola (F12) para obtener el enlace de demostración.`, 'info');
+                showPasswordResetSuccess();
+            });
+        } else {
+            console.error("❌ EmailJS no está cargado");
+            console.log(`📋 DEMO: Enlace de reset: ${resetLink}`);
+            showNotification(`EmailJS no está disponible. Revisa la consola (F12) para obtener el enlace de demostración.`, 'info');
+            showPasswordResetSuccess();
+        }
         
         // Clear form
         document.getElementById('resetEmail').value = '';
@@ -1133,8 +1195,27 @@ function handlePasswordReset(event) {
         showNotification('Si el email existe en nuestro sistema, recibirás un enlace de recuperación.', 'info');
         // Don't reveal if email exists or not for security
         setTimeout(() => {
-            showLoginForm();
+            showPasswordResetSuccess();
         }, 2000);
+    }
+}
+
+function showPasswordResetSuccess() {
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const passwordResetForm = document.getElementById('passwordResetForm');
+    const passwordResetSuccess = document.getElementById('passwordResetSuccess');
+    
+    if (loginForm) loginForm.classList.add('hidden');
+    if (registerForm) registerForm.classList.add('hidden');
+    if (passwordResetForm) passwordResetForm.classList.add('hidden');
+    if (passwordResetSuccess) passwordResetSuccess.classList.remove('hidden');
+    
+    // Hide any existing notifications
+    const notification = document.getElementById('notification');
+    if (notification) {
+        notification.classList.remove('show');
+        notification.style.transform = 'translateX(400px)';
     }
 }
 
@@ -1242,12 +1323,14 @@ function showLoginForm() {
     document.getElementById('loginForm').classList.remove('hidden');
     document.getElementById('registerForm').classList.add('hidden');
     document.getElementById('passwordResetForm').classList.add('hidden');
+    document.getElementById('passwordResetSuccess').classList.add('hidden');
 }
 
 function showRegisterForm() {
     document.getElementById('loginForm').classList.add('hidden');
     document.getElementById('registerForm').classList.remove('hidden');
     document.getElementById('passwordResetForm').classList.add('hidden');
+    document.getElementById('passwordResetSuccess').classList.add('hidden');
 }
 
 function handleLogin(event) {
@@ -1614,7 +1697,20 @@ function checkExistingSession() {
 
 // Initialize EmailJS
 (function() {
-    emailjs.init("YOUR_PUBLIC_KEY"); // Reemplaza con tu clave pública de EmailJS
+    // Wait for EmailJS to be available
+    function initEmailJS() {
+        if (typeof emailjs !== 'undefined') {
+            console.log('Initializing EmailJS...');
+            emailjs.init("3qgQJSxn6YLPCF-ZQ");
+            console.log('EmailJS initialized successfully');
+        } else {
+            console.log('EmailJS not ready, retrying in 500ms...');
+            setTimeout(initEmailJS, 500);
+        }
+    }
+    
+    // Start initialization
+    initEmailJS();
 })();
 
 // Initialize auth system
@@ -1675,12 +1771,14 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+            const href = this.getAttribute('href');
+            if (href && href !== '#') {
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
             }
         });
     });
