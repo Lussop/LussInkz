@@ -1096,18 +1096,39 @@ function handlePasswordReset(event) {
         user.resetExpiry = resetExpiry.toISOString();
         localStorage.setItem('lussinkz_users', JSON.stringify(users));
         
-        // Simulate sending email (in production, this would send a real email)
-        console.log(`Password reset link for ${email}: https://lussop.github.io/LussInkz/reset-password?token=${resetToken}`);
+        // Create reset link
+        const resetLink = `${window.location.origin}${window.location.pathname}?token=${resetToken}`;
         
-        showNotification(`Se ha enviado un enlace de recuperación a ${email}. Revisa tu bandeja de entrada.`, 'success');
+        // Send email using EmailJS
+        emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+            to_email: email,
+            to_name: user.name,
+            reset_link: resetLink,
+            from_name: "LussInkz"
+        })
+        .then(function(response) {
+            console.log("Email enviado!", response.status, response.text);
+            showNotification(`Se ha enviado un enlace de recuperación a ${email}. Revisa tu bandeja de entrada.`, 'success');
+            
+            // Go back to login
+            setTimeout(() => {
+                showLoginForm();
+            }, 2000);
+        }, function(error) {
+            console.log("Error enviando email:", error);
+            
+            // Fallback: show link in console and notification
+            console.log(`DEMO: Enlace de reset: ${resetLink}`);
+            showNotification(`Se ha generado un enlace de recuperación. Revisa la consola (F12) para obtener el enlace de demostración.`, 'info');
+            
+            // Go back to login
+            setTimeout(() => {
+                showLoginForm();
+            }, 3000);
+        });
         
-        // For demo purposes, show the reset link in console
-        console.log(`DEMO: Enlace de reset: https://lussop.github.io/LussInkz/reset-password?token=${resetToken}`);
-        
-        // Go back to login
-        setTimeout(() => {
-            showLoginForm();
-        }, 2000);
+        // Clear form
+        document.getElementById('resetEmail').value = '';
     } else {
         showNotification('Si el email existe en nuestro sistema, recibirás un enlace de recuperación.', 'info');
         // Don't reveal if email exists or not for security
@@ -1115,9 +1136,6 @@ function handlePasswordReset(event) {
             showLoginForm();
         }, 2000);
     }
-    
-    // Clear form
-    document.getElementById('resetEmail').value = '';
 }
 
 // Check for password reset in URL
@@ -1593,6 +1611,11 @@ function checkExistingSession() {
         }
     }
 }
+
+// Initialize EmailJS
+(function() {
+    emailjs.init("YOUR_PUBLIC_KEY"); // Reemplaza con tu clave pública de EmailJS
+})();
 
 // Initialize auth system
 document.addEventListener('DOMContentLoaded', function() {
