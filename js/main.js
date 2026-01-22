@@ -1167,7 +1167,7 @@ function handlePasswordReset(event) {
         if (typeof emailjs !== 'undefined') {
             console.log('Enviando email con los siguientes parámetros:', templateParams);
             console.log('Service ID: service_w8p6kjj');
-            console.log('Template ID: template_lnm3nafc');
+            console.log('Template ID: template_sqfz0na');
             
             // Try with minimal parameters first
             const minimalParams = {
@@ -1178,7 +1178,7 @@ function handlePasswordReset(event) {
             
             console.log('Intentando con parámetros mínimos:', minimalParams);
             
-            emailjs.send("service_w8p6kjj", "template_q34i8wg", minimalParams)
+            emailjs.send("service_w8p6kjj", "template_sqfz0na", minimalParams)
             .then(function(response) {
                 console.log("✅ Email enviado exitosamente!", response.status, response.text);
                 showPasswordResetSuccess();
