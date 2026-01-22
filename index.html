@@ -190,7 +190,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 8px;
+            padding: 0 12px;
         }
 
         .theme-toggle:hover {
@@ -198,30 +198,11 @@
             box-shadow: 0 4px 12px rgba(255,0,0,0.2);
         }
 
-        .theme-toggle .slider {
-            position: absolute;
-            top: 4px;
-            left: 4px;
-            width: 27px;
-            height: 27px;
-            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
-            border-radius: 50%;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            z-index: 2;
-        }
-
-        .theme-toggle.active .slider {
-            transform: translateX(35px);
-            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
-            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
-        }
-
         .theme-icon {
             position: relative;
-            font-size: 18px;
+            font-size: 20px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1;
+            z-index: 2;
             line-height: 1;
         }
 
@@ -1401,7 +1382,6 @@
 
     <!-- Theme Toggle -->
     <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
-        <div class="slider"></div>
         <span class="theme-icon sun">☀️</span>
         <span class="theme-icon moon">🌙</span>
     </div>
