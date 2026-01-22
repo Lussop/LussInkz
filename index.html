@@ -1403,9 +1403,119 @@
             background: white;
             border-radius: 16px;
             max-width: 90%;
-            max-height: 90%;
-            overflow: auto;
+            max-height: 90vh;
+            overflow-y: auto;
             position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Auth Modal Specific Styles */
+        #authModal .modal-content {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        #authModal .modal-content h2 {
+            color: var(--text-primary);
+        }
+
+        #authModal .modal-content p {
+            color: var(--text-secondary);
+        }
+
+        #authModal .modal-content label {
+            color: var(--text-primary);
+        }
+
+        #authModal .modal-content input {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        #authModal .modal-content input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1);
+        }
+
+        #authModal .modal-content input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        #authModal .modal-content button {
+            background: linear-gradient(135deg, var(--accent-color) 0%, #cc0000 100%);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #authModal .modal-content button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 0, 0, 0.3);
+        }
+
+        #authModal .modal-content a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        #authModal .modal-content a:hover {
+            text-decoration: underline;
+        }
+
+        #authModal .modal-content .auth-form {
+            padding: 2rem;
+        }
+
+        #authModal .modal-content .auth-form input {
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        #authModal .modal-content .auth-form input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1);
+        }
+
+        #authModal .modal-content .auth-form input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        #authModal .modal-content .auth-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        #authModal .modal-content .auth-form button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--accent-color) 0%, #cc0000 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #authModal .modal-content .auth-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 0, 0, 0.3);
         }
 
         /* Notification styles */

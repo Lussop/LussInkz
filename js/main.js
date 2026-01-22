@@ -1054,9 +1054,16 @@ if (users.length === 0) {
 
 // Authentication Functions
 function openAuthModal() {
+    console.log('openAuthModal called'); // Debug
     const modal = document.getElementById('authModal');
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    console.log('Modal found:', modal); // Debug
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        console.log('Modal should be visible now'); // Debug
+    } else {
+        console.error('Modal not found!'); // Debug
+    }
 }
 
 function closeAuthModal() {
