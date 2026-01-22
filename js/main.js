@@ -1072,14 +1072,164 @@ function closeAuthModal() {
     document.body.style.overflow = 'auto';
 }
 
+function showPasswordReset() {
+    document.getElementById('loginForm').classList.add('hidden');
+    document.getElementById('registerForm').classList.add('hidden');
+    document.getElementById('passwordResetForm').classList.remove('hidden');
+}
+
+function handlePasswordReset(event) {
+    event.preventDefault();
+    
+    const email = document.getElementById('resetEmail').value;
+    
+    // Check if user exists
+    const user = users.find(u => u.email === email);
+    
+    if (user) {
+        // Generate reset token (in production, this should be more secure)
+        const resetToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        const resetExpiry = new Date(Date.now() + 3600000); // 1 hour from now
+        
+        // Store reset token
+        user.resetToken = resetToken;
+        user.resetExpiry = resetExpiry.toISOString();
+        localStorage.setItem('lussinkz_users', JSON.stringify(users));
+        
+        // Simulate sending email (in production, this would send a real email)
+        console.log(`Password reset link for ${email}: https://lussop.github.io/LussInkz/reset-password?token=${resetToken}`);
+        
+        showNotification(`Se ha enviado un enlace de recuperación a ${email}. Revisa tu bandeja de entrada.`, 'success');
+        
+        // For demo purposes, show the reset link in console
+        console.log(`DEMO: Enlace de reset: https://lussop.github.io/LussInkz/reset-password?token=${resetToken}`);
+        
+        // Go back to login
+        setTimeout(() => {
+            showLoginForm();
+        }, 2000);
+    } else {
+        showNotification('Si el email existe en nuestro sistema, recibirás un enlace de recuperación.', 'info');
+        // Don't reveal if email exists or not for security
+        setTimeout(() => {
+            showLoginForm();
+        }, 2000);
+    }
+    
+    // Clear form
+    document.getElementById('resetEmail').value = '';
+}
+
+// Check for password reset in URL
+function checkPasswordReset() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    
+    if (token) {
+        const user = users.find(u => u.resetToken === token && u.resetExpiry && new Date(u.resetExpiry) > new Date());
+        
+        if (user) {
+            // Show password reset form
+            showNewPasswordForm(user);
+        } else {
+            showNotification('El enlace de recuperación ha expirado o es inválido.', 'error');
+        }
+    }
+}
+
+function showNewPasswordForm(user) {
+    // Create a simple form for new password
+    const modal = document.getElementById('authModal');
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Hide all forms and show reset form
+    document.getElementById('loginForm').classList.add('hidden');
+    document.getElementById('registerForm').classList.add('hidden');
+    document.getElementById('passwordResetForm').classList.add('hidden');
+    
+    // Create new password form
+    const resetForm = document.getElementById('passwordResetForm');
+    resetForm.innerHTML = `
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold mb-2" style="color: var(--text-primary);">Nueva Contraseña</h2>
+            <p style="color: var(--text-secondary);">Ingresa tu nueva contraseña</p>
+        </div>
+        
+        <form onsubmit="handleNewPassword(event, '${user.email}')">
+            <div class="mb-4">
+                <label class="block mb-2 font-semibold" style="color: var(--text-primary);">Nueva Contraseña</label>
+                <input type="password" id="newPassword" required 
+                       class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none"
+                       style="background-color: var(--bg-primary); border-color: var(--border-color); color: var(--text-primary);"
+                       placeholder="Mínimo 6 caracteres">
+            </div>
+            <div class="mb-4">
+                <label class="block mb-2 font-semibold" style="color: var(--text-primary);">Confirmar Contraseña</label>
+                <input type="password" id="confirmNewPassword" required 
+                       class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none"
+                       style="background-color: var(--bg-primary); border-color: var(--border-color); color: var(--text-primary);"
+                       placeholder="Repite tu nueva contraseña">
+            </div>
+            <button type="submit" class="w-full py-3 rounded-lg font-semibold transition-all duration-300"
+                    style="background: linear-gradient(135deg, var(--accent-color) 0%, #cc0000 100%); color: white;">
+                <i class="fas fa-check mr-2"></i>Actualizar Contraseña
+            </button>
+        </form>
+        
+        <div class="text-center mt-6">
+            <p style="color: var(--text-secondary);">
+                <a href="#" onclick="showLoginForm()" class="font-semibold" style="color: var(--accent-color);">
+                    <i class="fas fa-arrow-left mr-2"></i>Volver al Login
+                </a>
+            </p>
+        </div>
+    `;
+}
+
+function handleNewPassword(event, email) {
+    event.preventDefault();
+    
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmNewPassword').value;
+    
+    if (newPassword !== confirmPassword) {
+        showNotification('Las contraseñas no coinciden', 'error');
+        return;
+    }
+    
+    if (newPassword.length < 6) {
+        showNotification('La contraseña debe tener al menos 6 caracteres', 'error');
+        return;
+    }
+    
+    // Update user password
+    const user = users.find(u => u.email === email);
+    if (user) {
+        user.password = newPassword;
+        user.resetToken = null;
+        user.resetExpiry = null;
+        localStorage.setItem('lussinkz_users', JSON.stringify(users));
+        
+        showNotification('¡Contraseña actualizada correctamente! Ya puedes iniciar sesión.', 'success');
+        
+        // Go to login
+        setTimeout(() => {
+            showLoginForm();
+        }, 2000);
+    }
+}
+
 function showLoginForm() {
     document.getElementById('loginForm').classList.remove('hidden');
     document.getElementById('registerForm').classList.add('hidden');
+    document.getElementById('passwordResetForm').classList.add('hidden');
 }
 
 function showRegisterForm() {
     document.getElementById('loginForm').classList.add('hidden');
     document.getElementById('registerForm').classList.remove('hidden');
+    document.getElementById('passwordResetForm').classList.add('hidden');
 }
 
 function handleLogin(event) {
@@ -1447,6 +1597,7 @@ function checkExistingSession() {
 // Initialize auth system
 document.addEventListener('DOMContentLoaded', function() {
     checkExistingSession();
+    checkPasswordReset(); // Check for password reset token in URL
     
     // Add contact form handler
     const contactForm = document.querySelector('.contact-form');

@@ -2262,8 +2262,8 @@
                                placeholder="••••••••">
                     </div>
                     <div class="mb-6">
-                        <label class="flex items-center">
-                            <input type="checkbox" id="rememberMe" class="mr-2">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" id="rememberMe" class="mr-3 w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500">
                             <span style="color: var(--text-secondary);">Recordarme</span>
                         </label>
                     </div>
@@ -2277,6 +2277,41 @@
                     <p style="color: var(--text-secondary);">
                         ¿No tienes cuenta? 
                         <a href="#" onclick="showRegisterForm()" class="font-semibold" style="color: var(--accent-color);">Regístrate aquí</a>
+                    </p>
+                    <p class="mt-2">
+                        <a href="#" onclick="showPasswordReset()" class="font-semibold text-sm" style="color: var(--accent-color);">
+                            ¿Olvidaste tu contraseña?
+                        </a>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Password Reset Form -->
+            <div id="passwordResetForm" class="auth-form hidden">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold mb-2" style="color: var(--text-primary);">Recuperar Contraseña</h2>
+                    <p style="color: var(--text-secondary);">Te enviaremos un enlace para restablecer tu contraseña</p>
+                </div>
+                
+                <form onsubmit="handlePasswordReset(event)">
+                    <div class="mb-4">
+                        <label class="block mb-2 font-semibold" style="color: var(--text-primary);">Email</label>
+                        <input type="email" id="resetEmail" required 
+                               class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none"
+                               style="background-color: var(--bg-primary); border-color: var(--border-color); color: var(--text-primary);"
+                               placeholder="tu@email.com">
+                    </div>
+                    <button type="submit" class="w-full py-3 rounded-lg font-semibold transition-all duration-300"
+                            style="background: linear-gradient(135deg, var(--accent-color) 0%, #cc0000 100%); color: white;">
+                        <i class="fas fa-envelope mr-2"></i>Enviar Enlace de Recuperación
+                    </button>
+                </form>
+                
+                <div class="text-center mt-6">
+                    <p style="color: var(--text-secondary);">
+                        <a href="#" onclick="showLoginForm()" class="font-semibold" style="color: var(--accent-color);">
+                            <i class="fas fa-arrow-left mr-2"></i>Volver al Login
+                        </a>
                     </p>
                 </div>
             </div>
@@ -2334,8 +2369,8 @@
                                placeholder="Repite tu contraseña">
                     </div>
                     <div class="mb-6">
-                        <label class="flex items-center">
-                            <input type="checkbox" id="acceptTerms" required class="mr-2">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" id="acceptTerms" required class="mr-3 w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500">
                             <span style="color: var(--text-secondary);">
                                 Acepto los <a href="#" class="font-semibold" style="color: var(--accent-color);">términos y condiciones</a>
                             </span>
