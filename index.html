@@ -1524,48 +1524,36 @@
             box-shadow: 0 8px 24px rgba(255, 0, 0, 0.3);
         }
 
-        /* Checkbox wrapper con margin específico */
-        .checkbox-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin: 16px 0;
-        }
+      .checkbox-wrapper {
+    display: inline-flex; /* 🔑 NO flex normal */
+    align-items: center;
+    gap: 6px;
+    margin: 16px 0;
+}
 
-        /* Checkbox Styles - Centered */
-        .checkbox-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
+.checkbox-wrapper input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    flex-shrink: 0;
 
-        .checkbox-wrapper input[type="checkbox"] {
-            width: 50px;
-            height: 18px;
-            accent-color: var(--accent-color);
-            margin: 0;
-            flex-shrink: 0;
-            border: 2px solid var(--border-color);
-            border-radius: 3px;
-            background: var(--bg-primary);
-            cursor: pointer;
-            position: relative;
-            appearance: checkbox;
-            -webkit-appearance: checkbox;
-            -moz-appearance: checkbox;
-        }
+    appearance: auto;
+    -webkit-appearance: checkbox;
 
-        .checkbox-wrapper label {
-            margin: 0;
-            color: var(--text-secondary) !important;
-            cursor: pointer;
-            user-select: none;
-            display: inline;
-            white-space: nowrap;
-            font-size: 14px;
-            line-height: 1;
-        }
+    line-height: 15px;
+}
+
+.checkbox-wrapper label {
+    margin: 0;
+    padding: 0;
+    line-height: 15px;
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+}
+
 
         .checkbox-wrapper label a {
             color: var(--accent-color);
