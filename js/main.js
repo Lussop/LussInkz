@@ -1169,14 +1169,17 @@ function handlePasswordReset(event) {
             console.log('🔧 Service ID: service_w8p6kjj');
             console.log('📝 Template ID: template_v4k020w');
             
-            // Try with minimal parameters first
+            // Try with different parameter names
             const minimalParams = {
                 to_email: email,
                 to_name: user.name || "Cliente",
-                reset_link: resetLink
+                from_name: "LussInkz",
+                message: resetLink,
+                reset_link: resetLink,
+                link: resetLink
             };
             
-            console.log('⚡ Intentando con parámetros mínimos:', minimalParams);
+            console.log('⚡ Intentando con parámetros extendidos:', minimalParams);
             console.log('🚀 Enviando a EmailJS...');
             
             emailjs.send("service_w8p6kjj", "template_v4k020w", minimalParams)
