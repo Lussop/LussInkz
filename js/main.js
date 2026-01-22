@@ -776,14 +776,296 @@ function toggleTheme() {
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
 }
 
-// Search toggle functionality
-function toggleSearch() {
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) {
-        searchInput.focus();
-        searchInput.select();
+// FAQ Functionality
+function toggleFAQ(element) {
+    const faqItem = element.parentElement;
+    const allItems = document.querySelectorAll('.faq-item');
+    
+    // Close all other items
+    allItems.forEach(item => {
+        if (item !== faqItem) {
+            item.classList.remove('active');
+        }
+    });
+    
+    // Toggle current item
+    faqItem.classList.toggle('active');
+}
+
+function filterFAQ(category) {
+    const allItems = document.querySelectorAll('.faq-item');
+    const allButtons = document.querySelectorAll('.faq-category-btn');
+    
+    // Update button states
+    allButtons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.category === category) {
+            btn.classList.add('active');
+        }
+    });
+    
+    // Filter items
+    allItems.forEach(item => {
+        if (category === 'all' || item.dataset.category === category) {
+            item.style.display = 'block';
+            setTimeout(() => {
+                item.style.opacity = '1';
+                item.style.transform = 'translateY(0)';
+            }, 100);
+        } else {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(-20px)';
+            setTimeout(() => {
+                item.style.display = 'none';
+            }, 300);
+        }
+    });
+}
+
+function searchFAQ(searchTerm) {
+    const allItems = document.querySelectorAll('.faq-item');
+    const term = searchTerm.toLowerCase();
+    
+    allItems.forEach(item => {
+        const question = item.querySelector('h3').textContent.toLowerCase();
+        const answer = item.querySelector('p').textContent.toLowerCase();
+        
+        if (question.includes(term) || answer.includes(term)) {
+            item.style.display = 'block';
+            setTimeout(() => {
+                item.style.opacity = '1';
+                item.style.transform = 'translateY(0)';
+            }, 100);
+        } else {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(-20px)';
+            setTimeout(() => {
+                item.style.display = 'none';
+            }, 300);
+        }
+    });
+    
+    // Reset category buttons
+    document.querySelectorAll('.faq-category-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.category === 'all') {
+            btn.classList.add('active');
+        }
+    });
+}
+
+// Newsletter functionality
+function subscribeNewsletter(event) {
+    event.preventDefault();
+    const email = event.target.querySelector('input[type="email"]').value;
+    
+    // Show success notification
+    showNotification('¡Gracias por suscribirte! Te enviaremos las últimas novedades.', 'success');
+    
+    // Clear form
+    event.target.reset();
+    
+    // Here you would normally send the email to your backend
+    console.log('Newsletter subscription:', email);
+}
+
+// Contact form functionality
+function sendContactForm(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
+    
+    // Show success notification
+    showNotification('¡Mensaje enviado! Te responderemos a la brevedad.', 'success');
+    
+    // Clear form
+    event.target.reset();
+    
+    // Here you would normally send the data to your backend
+    console.log('Contact form:', data);
+}
+
+// Enhanced notification system
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    const notificationText = document.getElementById('notification-text');
+    const icon = notification.querySelector('i');
+    
+    // Set message
+    notificationText.textContent = message;
+    
+    // Set icon and color based on type
+    notification.className = 'notification show';
+    if (type === 'success') {
+        icon.className = 'fas fa-check-circle text-green-500';
+        notification.style.borderLeft = '4px solid #10b981';
+    } else if (type === 'error') {
+        icon.className = 'fas fa-exclamation-circle text-red-500';
+        notification.style.borderLeft = '4px solid #ef4444';
+    } else if (type === 'info') {
+        icon.className = 'fas fa-info-circle text-blue-500';
+        notification.style.borderLeft = '4px solid #3b82f6';
+    }
+    
+    // Auto hide after 5 seconds
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 5000);
+}
+
+// Enhanced cart functionality
+function updateCartUI() {
+    const cartCount = document.getElementById('cartCount');
+    const cartTotal = document.getElementById('cartTotal');
+    const cartItems = document.getElementById('cartItems');
+    
+    if (cartCount) cartCount.textContent = cart.length;
+    
+    if (cartTotal) {
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        cartTotal.textContent = `$${total.toLocaleString('es-AR')}`;
+    }
+    
+    if (cartItems) {
+        if (cart.length === 0) {
+            cartItems.innerHTML = '<p class="text-center py-8">Tu carrito está vacío</p>';
+        } else {
+            cartItems.innerHTML = cart.map(item => `
+                <div class="flex items-center gap-4 py-4 border-b">
+                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
+                    <div class="flex-1">
+                        <h4 class="font-semibold">${item.name}</h4>
+                        <p class="text-sm">Talla: ${item.size || 'U'} | Cantidad: ${item.quantity}</p>
+                        <p class="font-bold">$${(item.price * item.quantity).toLocaleString('es-AR')}</p>
+                    </div>
+                    <button onclick="removeFromCart(${item.id})" class="text-red-500 hover:text-red-700">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
     }
 }
+
+function removeFromCart(productId) {
+    cart = cart.filter(item => item.id !== productId);
+    updateCartUI();
+    saveCartToStorage();
+    showNotification('Producto eliminado del carrito', 'info');
+}
+
+// Enhanced product modal
+function openProductModal(productId) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+    
+    const modal = document.getElementById('productModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalPrice = document.getElementById('modalPrice');
+    const modalDescription = document.getElementById('modalDescription');
+    const thumbnailContainer = document.getElementById('thumbnailContainer');
+    
+    // Set product info
+    modalImage.src = product.image;
+    modalTitle.textContent = product.name;
+    modalPrice.textContent = `$${product.price.toLocaleString('es-AR')}`;
+    modalDescription.innerHTML = product.description;
+    
+    // Set thumbnails
+    if (product.images && product.images.length > 1) {
+        thumbnailContainer.innerHTML = product.images.map((img, index) => `
+            <img src="${img}" alt="${product.name} ${index + 1}" 
+                 class="thumbnail ${index === 0 ? 'active' : ''}" 
+                 onclick="changeModalImage('${img}')">
+        `).join('');
+        thumbnailContainer.style.display = 'flex';
+    } else {
+        thumbnailContainer.style.display = 'none';
+    }
+    
+    // Reset size and quantity
+    selectedSize = null;
+    currentQuantity = 1;
+    document.getElementById('quantity').textContent = '1';
+    
+    // Update size buttons
+    const sizeButtons = document.querySelectorAll('.size-btn');
+    sizeButtons.forEach(btn => {
+        btn.classList.remove('selected');
+        if (product.sizes && product.sizes.includes(btn.dataset.size)) {
+            btn.style.display = 'inline-block';
+        } else {
+            btn.style.display = 'none';
+        }
+    });
+    
+    // Show modal
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function changeModalImage(imageSrc) {
+    const modalImage = document.getElementById('modalImage');
+    const thumbnails = document.querySelectorAll('.thumbnail');
+    
+    modalImage.src = imageSrc;
+    
+    thumbnails.forEach(thumb => {
+        thumb.classList.remove('active');
+        if (thumb.src === imageSrc || thumb.src.includes(imageSrc.split('/').pop())) {
+            thumb.classList.add('active');
+        }
+    });
+}
+
+// Smooth scroll to products
+function scrollToProducts() {
+    const productsSection = document.getElementById('products');
+    if (productsSection) {
+        productsSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+}
+
+// Initialize enhanced features
+document.addEventListener('DOMContentLoaded', function() {
+    initializeApp();
+    
+    // Initialize FAQ
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+        item.style.transition = 'all 0.3s ease';
+    });
+    
+    // Initialize newsletter
+    const newsletterForm = document.querySelector('form[onsubmit*="subscribeNewsletter"]');
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', subscribeNewsletter);
+    }
+    
+    // Initialize contact form
+    const contactForm = document.querySelector('form[onsubmit*="sendContactForm"]');
+    if (contactForm) {
+        contactForm.addEventListener('submit', sendContactForm);
+    }
+    
+    // Add smooth scroll for all anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
 
 // Parallax effect for hero section
 window.addEventListener('scroll', () => {
