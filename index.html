@@ -1517,6 +1517,39 @@
             box-shadow: 0 8px 24px rgba(255, 0, 0, 0.3);
         }
 
+        /* Checkbox Styles - Centered */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-color);
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        .checkbox-wrapper label {
+            margin: 0;
+            color: var(--text-secondary);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-wrapper label a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .checkbox-wrapper label a:hover {
+            text-decoration: underline;
+        }
+
         /* Notification styles */
         .notification {
             position: fixed;
@@ -2261,10 +2294,10 @@
                                placeholder="••••••••">
                     </div>
                     <div class="mb-6">
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" id="rememberMe" class="mr-3 w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500">
-                            <span style="color: var(--text-secondary);">Recordarme</span>
-                        </label>
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="rememberMe">
+                            <label for="rememberMe">Recordarme</label>
+                        </div>
                     </div>
                     <button type="submit" class="w-full py-3 rounded-lg font-semibold transition-all duration-300"
                             style="background: linear-gradient(135deg, var(--accent-color) 0%, #cc0000 100%); color: white;">
@@ -2368,12 +2401,12 @@
                                placeholder="Repite tu contraseña">
                     </div>
                     <div class="mb-6">
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" id="acceptTerms" required class="mr-3 w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500">
-                            <span style="color: var(--text-secondary);">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="acceptTerms" required>
+                            <label for="acceptTerms">
                                 Acepto los <a href="#" class="font-semibold" style="color: var(--accent-color);">términos y condiciones</a>
-                            </span>
-                        </label>
+                            </label>
+                        </div>
                     </div>
                     <button type="submit" class="w-full py-3 rounded-lg font-semibold transition-all duration-300"
                             style="background: linear-gradient(135deg, var(--accent-color) 0%, #cc0000 100%); color: white;">
