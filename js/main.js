@@ -1230,18 +1230,30 @@ function showPasswordResetSuccess() {
 
 // Check for password reset in URL
 function checkPasswordReset() {
+    console.log('🔍 Verificando reset de contraseña en URL...');
+    
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
+    
+    console.log('📋 Token encontrado en URL:', token);
+    console.log('👥 Usuarios disponibles:', users.map(u => ({email: u.email, hasToken: !!u.resetToken, token: u.resetToken})));
     
     if (token) {
         const user = users.find(u => u.resetToken === token && u.resetExpiry && new Date(u.resetExpiry) > new Date());
         
+        console.log('🔍 Buscando usuario con token:', token);
+        console.log('👤 Usuario encontrado:', user);
+        
         if (user) {
+            console.log('✅ Token válido, mostrando formulario de nueva contraseña');
             // Show password reset form
             showNewPasswordForm(user);
         } else {
+            console.error('❌ Token inválido o expirado');
             showNotification('El enlace de recuperación ha expirado o es inválido.', 'error');
         }
+    } else {
+        console.log('ℹ️ No hay token en URL');
     }
 }
 
