@@ -1473,7 +1473,8 @@
         }
 
         #authModal .modal-content .auth-form {
-            padding: 1.5rem;
+            padding: 0;
+            margin: 1.5rem;
         }
 
         #authModal .modal-content .auth-form input {
@@ -1515,11 +1516,20 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            margin-top: 8px;
         }
 
         #authModal .modal-content .auth-form button:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(255, 0, 0, 0.3);
+        }
+
+        /* Checkbox wrapper con margin específico */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 16px 0;
         }
 
         /* Checkbox Styles - Centered */
