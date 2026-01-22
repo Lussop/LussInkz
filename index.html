@@ -1578,9 +1578,32 @@
                     <button onclick="toggleSearch()" class="hover:text-black transition" style="color: var(--text-primary);">
                         <i class="fas fa-search"></i>
                     </button>
-                    <button class="hover:text-black transition" style="color: var(--text-primary);">
-                        <i class="far fa-user"></i>
-                    </button>
+                    <!-- User Menu - Reemplaza el botón de usuario genérico -->
+                    <div id="userMenu" class="user-menu hidden">
+                        <button onclick="toggleUserMenu()" class="user-menu-btn">
+                            <i class="fas fa-user"></i>
+                            <span id="userName">Usuario</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div id="userDropdown" class="user-dropdown">
+                            <a href="#" onclick="showProfile()">
+                                <i class="fas fa-user-circle mr-2"></i>Mi Perfil
+                            </a>
+                            <a href="#" onclick="showOrders()">
+                                <i class="fas fa-shopping-bag mr-2"></i>Mis Pedidos
+                            </a>
+                            <a href="#" onclick="showFavorites()">
+                                <i class="fas fa-heart mr-2"></i>Favoritos
+                            </a>
+                            <a href="#" onclick="showSettings()">
+                                <i class="fas fa-cog mr-2"></i>Configuración
+                            </a>
+                            <hr style="border-color: var(--border-color);">
+                            <a href="#" onclick="logout()" class="text-red-500">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
+                            </a>
+                        </div>
+                    </div>
                     <button onclick="toggleCart()" class="relative hover:text-black transition" style="color: var(--text-primary);">
                         <i class="fas fa-shopping-cart"></i>
                         <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
@@ -2224,33 +2247,7 @@
         </div>
     </div>
 
-    <!-- User Menu -->
-    <div id="userMenu" class="user-menu hidden">
-        <button onclick="toggleUserMenu()" class="user-menu-btn">
-            <i class="fas fa-user"></i>
-            <span id="userName">Usuario</span>
-            <i class="fas fa-chevron-down"></i>
-        </button>
-        <div id="userDropdown" class="user-dropdown">
-            <a href="#" onclick="showProfile()">
-                <i class="fas fa-user-circle mr-2"></i>Mi Perfil
-            </a>
-            <a href="#" onclick="showOrders()">
-                <i class="fas fa-shopping-bag mr-2"></i>Mis Pedidos
-            </a>
-            <a href="#" onclick="showFavorites()">
-                <i class="fas fa-heart mr-2"></i>Favoritos
-            </a>
-            <a href="#" onclick="showSettings()">
-                <i class="fas fa-cog mr-2"></i>Configuración
-            </a>
-            <hr style="border-color: var(--border-color);">
-            <a href="#" onclick="logout()" class="text-red-500">
-                <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
-            </a>
-        </div>
-    </div>
-
+    
     <!-- Admin Panel -->
     <div id="adminPanel" class="admin-panel hidden">
         <div class="admin-header">
@@ -2522,17 +2519,14 @@
                                 Síguenos en Redes
                             </h4>
                             <div class="flex space-x-4 footer-social">
+                                <a href="https://wa.me/5492995917923?text=Hola!%20Tengo%20una%20consulta%20sobre%20LussInkz" target="_blank" title="WhatsApp">
+                                    <i class="fab fa-whatsapp text-xl"></i>
+                                </a>
                                 <a href="https://instagram.com/lussinkz" target="_blank" title="Instagram">
                                     <i class="fab fa-instagram text-xl"></i>
                                 </a>
-                                <a href="https://facebook.com/lussinkz" target="_blank" title="Facebook">
-                                    <i class="fab fa-facebook text-xl"></i>
-                                </a>
                                 <a href="https://tiktok.com/@lussinkz" target="_blank" title="TikTok">
                                     <i class="fab fa-tiktok text-xl"></i>
-                                </a>
-                                <a href="https://twitter.com/lussinkz" target="_blank" title="Twitter">
-                                    <i class="fab fa-twitter text-xl"></i>
                                 </a>
                             </div>
                         </div>
@@ -2617,14 +2611,17 @@
                 </div>
                 <div>
                     <h4 class="font-semibold mb-4">Síguenos</h4>
-                    <div class="flex space-x-4">
-                        <a href="https://www.instagram.com/lussinkz/" target="_blank" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-600 transition">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="https://www.tiktok.com/@lussinkz" target="_blank" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-600 transition">
-                            <i class="fab fa-tiktok"></i>
-                        </a>
-                    </div>
+                    <div class="flex space-x-6">
+                    <a href="https://wa.me/5492995917923?text=Hola!%20Tengo%20una%20consulta%20sobre%20LussInkz" target="_blank" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-600 transition">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="https://instagram.com/lussinkz" target="_blank" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-600 transition">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://tiktok.com/@lussinkz" target="_blank" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-600 transition">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                </div>
                 </div>
             </div>
             <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
