@@ -177,63 +177,124 @@
         /* Theme toggle styles - Enhanced with animations */
         .theme-toggle {
             position: relative;
-            width: 60px;
-            height: 30px;
-            background: var(--border-color);
-            border-radius: 15px;
+            width: 70px;
+            height: 35px;
+            background: linear-gradient(135deg, var(--border-color) 0%, var(--bg-light) 100%);
+            border-radius: 20px;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            border: 2px solid var(--border-color);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(255,0,0,0.2);
         }
 
         .theme-toggle .slider {
             position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 24px;
-            height: 24px;
-            background: white;
+            top: 4px;
+            left: 4px;
+            width: 27px;
+            height: 27px;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
             border-radius: 50%;
-            transition: transform 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 2;
         }
 
         .theme-toggle.active .slider {
-            transform: translateX(30px);
+            transform: translateX(35px);
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
         }
 
         .theme-icon {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 14px;
-            transition: opacity 0.3s ease;
+            font-size: 16px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
         }
 
         .theme-icon.sun {
-            left: 8px;
+            left: 10px;
             color: #fbbf24;
+            filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.6));
+            animation: sunGlow 2s ease-in-out infinite alternate;
         }
 
         .theme-icon.moon {
-            right: 8px;
+            right: 10px;
             color: #6b7280;
+            opacity: 0.6;
+            transition: all 0.4s ease;
         }
 
         /* Dark mode theme icon colors */
+        body.dark-mode .theme-toggle {
+            background: linear-gradient(135deg, #2d3748 0%, #1a1a1a 100%);
+            border-color: #ff0000;
+            box-shadow: inset 0 2px 4px rgba(255,0,0,0.1), 0 0 20px rgba(255,0,0,0.1);
+        }
+
+        body.dark-mode .theme-toggle:hover {
+            box-shadow: inset 0 2px 4px rgba(255,0,0,0.2), 0 0 30px rgba(255,0,0,0.3);
+        }
+
         body.dark-mode .theme-icon.sun {
             color: #fbbf24;
+            opacity: 0.4;
+            filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.3));
+            animation: none;
         }
 
         body.dark-mode .theme-icon.moon {
             color: #fbbf24;
+            opacity: 1;
+            filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.8));
+            animation: moonGlow 3s ease-in-out infinite alternate;
         }
 
         /* Light mode theme icon colors */
         body:not(.dark-mode) .theme-icon.sun {
             color: #fbbf24;
+            opacity: 1;
+            filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.8));
+            animation: sunGlow 2s ease-in-out infinite alternate;
         }
 
         body:not(.dark-mode) .theme-icon.moon {
             color: #6b7280;
+            opacity: 0.4;
+            filter: drop-shadow(0 0 4px rgba(107, 114, 128, 0.3));
+            animation: none;
+        }
+
+        /* Animations */
+        @keyframes sunGlow {
+            0% {
+                filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.8));
+                transform: translateY(-50%) scale(1);
+            }
+            100% {
+                filter: drop-shadow(0 0 20px rgba(251, 191, 36, 1));
+                transform: translateY(-50%) scale(1.1);
+            }
+        }
+
+        @keyframes moonGlow {
+            0% {
+                filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.8));
+                transform: translateY(-50%) rotate(0deg) scale(1);
+            }
+            100% {
+                filter: drop-shadow(0 0 20px rgba(251, 191, 36, 1));
+                transform: translateY(-50%) rotate(15deg) scale(1.1);
+            }
         }
 
         .product-card::before {
