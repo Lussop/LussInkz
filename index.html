@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LussInkz - Tienda de Ropa Premium</title>
+    <title>LussInkz - Tienda de Ropa </title>
     <meta name="description" content="Descubre las últimas tendencias en moda urbana con LussInkz. Prendas exclusivas con diseño único.">
     
     <!-- Favicon -->
@@ -475,7 +475,381 @@
             border-color: var(--accent-color);
         }
 
-        /* Product Card Enhanced */
+        /* Authentication Styles */
+        .auth-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid var(--accent-color);
+            background: transparent;
+            color: var(--accent-color);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .auth-btn:hover {
+            background: var(--accent-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
+        }
+
+        .auth-form {
+            padding: 2rem;
+        }
+
+        .auth-form input {
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .auth-form input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1);
+        }
+
+        .auth-form input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        .auth-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .auth-form button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--accent-color) 0%, #cc0000 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .auth-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 0, 0, 0.3);
+        }
+
+        /* User Menu Styles */
+        .user-menu {
+            position: relative;
+        }
+
+        .user-menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid var(--accent-color);
+            background: var(--accent-color);
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .user-menu-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            min-width: 200px;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            overflow: hidden;
+            margin-top: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .user-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .user-dropdown a {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .user-dropdown a:hover {
+            background: var(--bg-light);
+            color: var(--accent-color);
+        }
+
+        .user-dropdown a:last-child {
+            border-bottom: none;
+        }
+
+        /* Admin Panel Styles */
+        .admin-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: var(--bg-primary);
+            border-left: 4px solid var(--accent-color);
+            box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .admin-panel.show {
+            right: 0;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 2px solid var(--border-color);
+            background: linear-gradient(135deg, var(--accent-color) 0%, #cc0000 100%);
+            color: white;
+        }
+
+        .admin-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .close-admin {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-admin:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .admin-tabs {
+            display: flex;
+            flex-direction: column;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .admin-tab {
+            padding: 16px 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .admin-tab:hover {
+            background: var(--bg-light);
+            border-left-color: var(--accent-color);
+        }
+
+        .admin-tab.active {
+            background: var(--bg-light);
+            border-left-color: var(--accent-color);
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .admin-content {
+            padding: 20px;
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .admin-section h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-light);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(255, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .stat-info h4 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-info p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--accent-color) 0%, #cc0000 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
+        }
+
+        .admin-table {
+            background: var(--bg-light);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .admin-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-table th {
+            background: var(--accent-color);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .admin-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .admin-table tr:hover {
+            background: var(--bg-primary);
+        }
+
+        .messages-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .message-item {
+            background: var(--bg-light);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .message-item:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .message-sender {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .message-date {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .message-content {
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
         .product-card {
             position: relative;
             overflow: hidden;
@@ -1198,6 +1572,9 @@
                 </div>
                 
                 <div class="flex items-center space-x-4">
+                    <button onclick="openAuthModal()" class="auth-btn">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Iniciar Sesión
+                    </button>
                     <button onclick="toggleSearch()" class="hover:text-black transition" style="color: var(--text-primary);">
                         <i class="fas fa-search"></i>
                     </button>
@@ -1722,7 +2099,309 @@
             </div>
         </div>
     </section>
-    <!-- Contact Section Enhanced -->
+    <!-- Login/Register Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content max-w-md">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+            
+            <!-- Login Form -->
+            <div id="loginForm" class="auth-form">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold mb-2" style="color: var(--text-primary);">Bienvenido</h2>
+                    <p style="color: var(--text-secondary);">Inicia sesión en tu cuenta LussInkz</p>
+                </div>
+                
+                <form onsubmit="handleLogin(event)">
+                    <div class="mb-4">
+                        <label class="block mb-2 font-semibold" style="color: var(--text-primary);">Email</label>
+                        <input type="email" id="loginEmail" required 
+                               class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none"
+                               style="background-color: var(--bg-primary); border-color: var(--border-color); color: var(--text-primary);"
+                               placeholder="tu@email.com">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2 font-semibold" style="color: var(--text-primary);">Contraseña</label>
+                        <input type="password" id="loginPassword" required 
+                               class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none"
+                               style="background-color: var(--bg-primary); border-color: var(--border-color); color: var(--text-primary);"
+                               placeholder="••••••••">
+                    </div>
+                    <div class="mb-6">
+                        <label class="flex items-center">
+                            <input type="checkbox" id="rememberMe" class="mr-2">
+                            <span style="color: var(--text-secondary);">Recordarme</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="w-full py-3 rounded-lg font-semibold transition-all duration-300"
+                            style="background: linear-gradient(135deg, var(--accent-color) 0%, #cc0000 100%); color: white;">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Iniciar Sesión
+                    </button>
+                </form>
+                
+                <div class="text-center mt-6">
+                    <p style="color: var(--text-secondary);">
+                        ¿No tienes cuenta? 
+                        <a href="#" onclick="showRegisterForm()" class="font-semibold" style="color: var(--accent-color);">Regístrate aquí</a>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Register Form -->
+            <div id="registerForm" class="auth-form hidden">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold mb-2" style="color: var(--text-primary);">Crear Cuenta</h2>
+                    <p style="color: var(--text-secondary);">Únete a LussInkz</p>
+                </div>
+                
+                <form onsubmit="handleRegister(event)">
+                    <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block mb-2 font-semibold" style="color: var(--text-primary);">Nombre</label>
+                            <input type="text" id="registerName" required 
+                                   class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none"
+                                   style="background-color: var(--bg-primary); border-color: var(--border-color); color: var(--text-primary);"
+                                   placeholder="Tu nombre">
+                        </div>
+                        <div>
+                            <label class="block mb-2 font-semibold" style="color: var(--text-primary);">Apellido</label>
+                            <input type="text" id="registerSurname" required 
+                                   class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none"
+                                   style="background-color: var(--bg-primary); border-color: var(--border-color); color: var(--text-primary);"
+                                   placeholder="Tu apellido">
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2 font-semibold" style="color: var(--text-primary);">Email</label>
+                        <input type="email" id="registerEmail" required 
+                               class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none"
+                               style="background-color: var(--bg-primary); border-color: var(--border-color); color: var(--text-primary);"
+                               placeholder="tu@email.com">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2 font-semibold" style="color: var(--text-primary);">Teléfono</label>
+                        <input type="tel" id="registerPhone" 
+                               class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none"
+                               style="background-color: var(--bg-primary); border-color: var(--border-color); color: var(--text-primary);"
+                               placeholder="+54 9 XXXX-XXXX">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2 font-semibold" style="color: var(--text-primary);">Contraseña</label>
+                        <input type="password" id="registerPassword" required 
+                               class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none"
+                               style="background-color: var(--bg-primary); border-color: var(--border-color); color: var(--text-primary);"
+                               placeholder="Mínimo 6 caracteres">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2 font-semibold" style="color: var(--text-primary);">Confirmar Contraseña</label>
+                        <input type="password" id="registerConfirmPassword" required 
+                               class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none"
+                               style="background-color: var(--bg-primary); border-color: var(--border-color); color: var(--text-primary);"
+                               placeholder="Repite tu contraseña">
+                    </div>
+                    <div class="mb-6">
+                        <label class="flex items-center">
+                            <input type="checkbox" id="acceptTerms" required class="mr-2">
+                            <span style="color: var(--text-secondary);">
+                                Acepto los <a href="#" class="font-semibold" style="color: var(--accent-color);">términos y condiciones</a>
+                            </span>
+                        </label>
+                    </div>
+                    <button type="submit" class="w-full py-3 rounded-lg font-semibold transition-all duration-300"
+                            style="background: linear-gradient(135deg, var(--accent-color) 0%, #cc0000 100%); color: white;">
+                        <i class="fas fa-user-plus mr-2"></i>Crear Cuenta
+                    </button>
+                </form>
+                
+                <div class="text-center mt-6">
+                    <p style="color: var(--text-secondary);">
+                        ¿Ya tienes cuenta? 
+                        <a href="#" onclick="showLoginForm()" class="font-semibold" style="color: var(--accent-color);">Inicia sesión</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Menu -->
+    <div id="userMenu" class="user-menu hidden">
+        <button onclick="toggleUserMenu()" class="user-menu-btn">
+            <i class="fas fa-user"></i>
+            <span id="userName">Usuario</span>
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        <div id="userDropdown" class="user-dropdown">
+            <a href="#" onclick="showProfile()">
+                <i class="fas fa-user-circle mr-2"></i>Mi Perfil
+            </a>
+            <a href="#" onclick="showOrders()">
+                <i class="fas fa-shopping-bag mr-2"></i>Mis Pedidos
+            </a>
+            <a href="#" onclick="showFavorites()">
+                <i class="fas fa-heart mr-2"></i>Favoritos
+            </a>
+            <a href="#" onclick="showSettings()">
+                <i class="fas fa-cog mr-2"></i>Configuración
+            </a>
+            <hr style="border-color: var(--border-color);">
+            <a href="#" onclick="logout()" class="text-red-500">
+                <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
+            </a>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-panel hidden">
+        <div class="admin-header">
+            <h2><i class="fas fa-crown mr-2"></i>Panel Administrador</h2>
+            <button onclick="toggleAdminPanel()" class="close-admin">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="admin-tabs">
+            <button onclick="showAdminSection('dashboard')" class="admin-tab active" data-section="dashboard">
+                <i class="fas fa-chart-line mr-2"></i>Dashboard
+            </button>
+            <button onclick="showAdminSection('products')" class="admin-tab" data-section="products">
+                <i class="fas fa-box mr-2"></i>Productos
+            </button>
+            <button onclick="showAdminSection('orders')" class="admin-tab" data-section="orders">
+                <i class="fas fa-shopping-cart mr-2"></i>Pedidos
+            </button>
+            <button onclick="showAdminSection('users')" class="admin-tab" data-section="users">
+                <i class="fas fa-users mr-2"></i>Usuarios
+            </button>
+            <button onclick="showAdminSection('messages')" class="admin-tab" data-section="messages">
+                <i class="fas fa-envelope mr-2"></i>Mensajes
+            </button>
+        </div>
+        
+        <div class="admin-content">
+            <!-- Dashboard Section -->
+            <div id="adminDashboard" class="admin-section active">
+                <h3>Resumen del Negocio</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>0</h4>
+                            <p>Pedidos Totales</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>0</h4>
+                            <p>Usuarios Registrados</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>0</h4>
+                            <p>Productos Activos</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>$0</h4>
+                            <p>Ingresos Totales</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Products Section -->
+            <div id="adminProducts" class="admin-section">
+                <div class="section-header">
+                    <h3>Gestión de Productos</h3>
+                    <button onclick="showAddProduct()" class="btn-primary">
+                        <i class="fas fa-plus mr-2"></i>Agregar Producto
+                    </button>
+                </div>
+                <div class="admin-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Producto</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody">
+                            <!-- Products will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Orders Section -->
+            <div id="adminOrders" class="admin-section">
+                <h3>Pedidos Recientes</h3>
+                <div class="admin-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Cliente</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Fecha</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <!-- Orders will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Users Section -->
+            <div id="adminUsers" class="admin-section">
+                <h3>Usuarios Registrados</h3>
+                <div class="admin-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Registro</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Users will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Messages Section -->
+            <div id="adminMessages" class="admin-section">
+                <h3>Mensajes de Contacto</h3>
+                <div class="messages-list" id="messagesList">
+                    <!-- Messages will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
     <section id="contact" class="py-20" style="background-color: var(--card-bg);">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16" data-aos="fade-up">

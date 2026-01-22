@@ -1030,7 +1030,445 @@ function scrollToProducts() {
     }
 }
 
-// Initialize enhanced features
+// Authentication System
+let currentUser = null;
+let users = JSON.parse(localStorage.getItem('lussinkz_users')) || [];
+let orders = JSON.parse(localStorage.getItem('lussinkz_orders')) || [];
+let messages = JSON.parse(localStorage.getItem('lussinkz_messages')) || [];
+
+// Initialize with admin user
+if (users.length === 0) {
+    users.push({
+        id: 1,
+        name: 'Admin',
+        surname: 'LussInkz',
+        email: 'admin@lussinkz.com',
+        password: 'admin123', // In production, this should be hashed
+        phone: '+54 9 2995 91-7923',
+        role: 'admin',
+        registeredAt: new Date().toISOString(),
+        isActive: true
+    });
+    localStorage.setItem('lussinkz_users', JSON.stringify(users));
+}
+
+// Authentication Functions
+function openAuthModal() {
+    const modal = document.getElementById('authModal');
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeAuthModal() {
+    const modal = document.getElementById('authModal');
+    modal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+function showLoginForm() {
+    document.getElementById('loginForm').classList.remove('hidden');
+    document.getElementById('registerForm').classList.add('hidden');
+}
+
+function showRegisterForm() {
+    document.getElementById('loginForm').classList.add('hidden');
+    document.getElementById('registerForm').classList.remove('hidden');
+}
+
+function handleLogin(event) {
+    event.preventDefault();
+    
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    const rememberMe = document.getElementById('rememberMe').checked;
+    
+    // Find user
+    const user = users.find(u => u.email === email && u.password === password);
+    
+    if (user) {
+        if (!user.isActive) {
+            showNotification('Tu cuenta está desactivada. Contacta al administrador.', 'error');
+            return;
+        }
+        
+        currentUser = user;
+        
+        // Save session
+        if (rememberMe) {
+            localStorage.setItem('lussinkz_session', JSON.stringify(user));
+        } else {
+            sessionStorage.setItem('lussinkz_session', JSON.stringify(user));
+        }
+        
+        // Update UI
+        updateUserUI();
+        closeAuthModal();
+        showNotification(`¡Bienvenido de nuevo, ${user.name}!`, 'success');
+        
+        // If admin, show admin panel
+        if (user.role === 'admin') {
+            setTimeout(() => {
+                showNotification('Panel administrador disponible', 'info');
+                // Add admin button to user menu
+                const userDropdown = document.getElementById('userDropdown');
+                const adminLink = document.createElement('a');
+                adminLink.href = '#';
+                adminLink.onclick = toggleAdminPanel;
+                adminLink.innerHTML = '<i class="fas fa-crown mr-2"></i>Panel Admin';
+                adminLink.className = 'text-yellow-500';
+                userDropdown.insertBefore(adminLink, userDropdown.lastElementChild);
+            }, 1000);
+        }
+    } else {
+        showNotification('Email o contraseña incorrectos', 'error');
+    }
+}
+
+function handleRegister(event) {
+    event.preventDefault();
+    
+    const name = document.getElementById('registerName').value;
+    const surname = document.getElementById('registerSurname').value;
+    const email = document.getElementById('registerEmail').value;
+    const phone = document.getElementById('registerPhone').value;
+    const password = document.getElementById('registerPassword').value;
+    const confirmPassword = document.getElementById('registerConfirmPassword').value;
+    const acceptTerms = document.getElementById('acceptTerms').checked;
+    
+    // Validation
+    if (password !== confirmPassword) {
+        showNotification('Las contraseñas no coinciden', 'error');
+        return;
+    }
+    
+    if (password.length < 6) {
+        showNotification('La contraseña debe tener al menos 6 caracteres', 'error');
+        return;
+    }
+    
+    if (!acceptTerms) {
+        showNotification('Debes aceptar los términos y condiciones', 'error');
+        return;
+    }
+    
+    // Check if user already exists
+    if (users.find(u => u.email === email)) {
+        showNotification('Este email ya está registrado', 'error');
+        return;
+    }
+    
+    // Create new user
+    const newUser = {
+        id: users.length + 1,
+        name,
+        surname,
+        email,
+        phone,
+        password, // In production, this should be hashed
+        role: 'user',
+        registeredAt: new Date().toISOString(),
+        isActive: true,
+        favorites: [],
+        orders: []
+    };
+    
+    users.push(newUser);
+    localStorage.setItem('lussinkz_users', JSON.stringify(users));
+    
+    // Auto login
+    currentUser = newUser;
+    localStorage.setItem('lussinkz_session', JSON.stringify(newUser));
+    
+    // Update UI
+    updateUserUI();
+    closeAuthModal();
+    showNotification(`¡Bienvenido a LussInkz, ${name}!`, 'success');
+}
+
+function logout() {
+    currentUser = null;
+    localStorage.removeItem('lussinkz_session');
+    sessionStorage.removeItem('lussinkz_session');
+    
+    updateUserUI();
+    showNotification('Sesión cerrada correctamente', 'info');
+    
+    // Close admin panel if open
+    const adminPanel = document.getElementById('adminPanel');
+    adminPanel.classList.remove('show');
+}
+
+function updateUserUI() {
+    const userMenu = document.getElementById('userMenu');
+    const authBtn = document.querySelector('.auth-btn');
+    
+    if (currentUser) {
+        // Show user menu
+        userMenu.classList.remove('hidden');
+        document.getElementById('userName').textContent = currentUser.name;
+        
+        // Hide auth button
+        if (authBtn) {
+            authBtn.style.display = 'none';
+        }
+    } else {
+        // Show auth button
+        if (authBtn) {
+            authBtn.style.display = 'flex';
+        }
+        
+        // Hide user menu
+        userMenu.classList.add('hidden');
+    }
+}
+
+function toggleUserMenu() {
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.classList.toggle('show');
+}
+
+// Admin Panel Functions
+function toggleAdminPanel() {
+    const adminPanel = document.getElementById('adminPanel');
+    adminPanel.classList.toggle('show');
+    
+    if (adminPanel.classList.contains('show')) {
+        loadAdminData();
+    }
+}
+
+function showAdminSection(section) {
+    // Hide all sections
+    document.querySelectorAll('.admin-section').forEach(s => {
+        s.classList.remove('active');
+    });
+    
+    // Remove active class from all tabs
+    document.querySelectorAll('.admin-tab').forEach(t => {
+        t.classList.remove('active');
+    });
+    
+    // Show selected section
+    document.getElementById(`admin${section.charAt(0).toUpperCase() + section.slice(1)}`).classList.add('active');
+    
+    // Add active class to clicked tab
+    document.querySelector(`[data-section="${section}"]`).classList.add('active');
+}
+
+function loadAdminData() {
+    // Update stats
+    updateAdminStats();
+    
+    // Load products
+    loadAdminProducts();
+    
+    // Load orders
+    loadAdminOrders();
+    
+    // Load users
+    loadAdminUsers();
+    
+    // Load messages
+    loadAdminMessages();
+}
+
+function updateAdminStats() {
+    const stats = {
+        totalOrders: orders.length,
+        totalUsers: users.length,
+        totalProducts: products.length,
+        totalRevenue: orders.reduce((sum, order) => sum + (order.total || 0), 0)
+    };
+    
+    // Update stat cards
+    const statCards = document.querySelectorAll('.stat-info h4');
+    if (statCards.length >= 4) {
+        statCards[0].textContent = stats.totalOrders;
+        statCards[1].textContent = stats.totalUsers;
+        statCards[2].textContent = stats.totalProducts;
+        statCards[3].textContent = `$${stats.totalRevenue.toLocaleString('es-AR')}`;
+    }
+}
+
+function loadAdminProducts() {
+    const tbody = document.getElementById('productsTableBody');
+    tbody.innerHTML = products.map(product => `
+        <tr>
+            <td>${product.id}</td>
+            <td>${product.name}</td>
+            <td>$${product.price.toLocaleString('es-AR')}</td>
+            <td>${product.stock || 'N/A'}</td>
+            <td><span class="status-badge ${product.featured ? 'featured' : 'active'}">${product.featured ? 'Destacado' : 'Activo'}</span></td>
+            <td>
+                <button onclick="editProduct(${product.id})" class="btn-edit">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button onclick="deleteProduct(${product.id})" class="btn-delete">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function loadAdminOrders() {
+    const tbody = document.getElementById('ordersTableBody');
+    tbody.innerHTML = orders.map(order => `
+        <tr>
+            <td>${order.id}</td>
+            <td>${order.customerName}</td>
+            <td>$${order.total?.toLocaleString('es-AR') || '0'}</td>
+            <td><span class="status-badge ${order.status || 'pending'}">${order.status || 'Pendiente'}</span></td>
+            <td>${new Date(order.date).toLocaleDateString('es-AR')}</td>
+            <td>
+                <button onclick="viewOrder(${order.id})" class="btn-view">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function loadAdminUsers() {
+    const tbody = document.getElementById('usersTableBody');
+    tbody.innerHTML = users.map(user => `
+        <tr>
+            <td>${user.id}</td>
+            <td>${user.name} ${user.surname}</td>
+            <td>${user.email}</td>
+            <td>${new Date(user.registeredAt).toLocaleDateString('es-AR')}</td>
+            <td><span class="status-badge ${user.isActive ? 'active' : 'inactive'}">${user.isActive ? 'Activo' : 'Inactivo'}</span></td>
+            <td>
+                <button onclick="toggleUserStatus(${user.id})" class="btn-toggle">
+                    <i class="fas fa-${user.isActive ? 'ban' : 'check'}"></i>
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function loadAdminMessages() {
+    const messagesList = document.getElementById('messagesList');
+    messagesList.innerHTML = messages.map(message => `
+        <div class="message-item">
+            <div class="message-header">
+                <span class="message-sender">${message.name}</span>
+                <span class="message-date">${new Date(message.date).toLocaleDateString('es-AR')}</span>
+            </div>
+            <div class="message-content">
+                <p><strong>Email:</strong> ${message.email}</p>
+                <p><strong>Teléfono:</strong> ${message.phone || 'No proporcionado'}</p>
+                <p><strong>Mensaje:</strong> ${message.message}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+// User Functions
+function showProfile() {
+    showNotification('Perfil de usuario en desarrollo', 'info');
+}
+
+function showOrders() {
+    showNotification('Historial de pedidos en desarrollo', 'info');
+}
+
+function showFavorites() {
+    showNotification('Favoritos en desarrollo', 'info');
+}
+
+function showSettings() {
+    showNotification('Configuración en desarrollo', 'info');
+}
+
+// Admin Functions
+function showAddProduct() {
+    showNotification('Agregar producto en desarrollo', 'info');
+}
+
+function editProduct(id) {
+    showNotification(`Editar producto ${id} en desarrollo`, 'info');
+}
+
+function deleteProduct(id) {
+    if (confirm('¿Estás seguro de eliminar este producto?')) {
+        products = products.filter(p => p.id !== id);
+        localStorage.setItem('lussinkz_products', JSON.stringify(products));
+        loadAdminProducts();
+        showNotification('Producto eliminado correctamente', 'success');
+    }
+}
+
+function viewOrder(id) {
+    showNotification(`Ver pedido ${id} en desarrollo`, 'info');
+}
+
+function toggleUserStatus(userId) {
+    const user = users.find(u => u.id === userId);
+    if (user) {
+        user.isActive = !user.isActive;
+        localStorage.setItem('lussinkz_users', JSON.stringify(users));
+        loadAdminUsers();
+        showNotification(`Usuario ${user.isActive ? 'activado' : 'desactivado'} correctamente`, 'success');
+    }
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(event) {
+    const userDropdown = document.getElementById('userDropdown');
+    const userMenuBtn = document.querySelector('.user-menu-btn');
+    
+    if (!userMenuBtn.contains(event.target) && !userDropdown.contains(event.target)) {
+        userDropdown.classList.remove('show');
+    }
+});
+
+// Check for existing session on page load
+function checkExistingSession() {
+    const sessionData = localStorage.getItem('lussinkz_session') || sessionStorage.getItem('lussinkz_session');
+    
+    if (sessionData) {
+        try {
+            currentUser = JSON.parse(sessionData);
+            updateUserUI();
+        } catch (error) {
+            console.error('Error parsing session data:', error);
+        }
+    }
+}
+
+// Initialize auth system
+document.addEventListener('DOMContentLoaded', function() {
+    checkExistingSession();
+    
+    // Add contact form handler
+    const contactForm = document.querySelector('.contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+            
+            // Save message
+            const message = {
+                id: messages.length + 1,
+                name: data.name,
+                email: data.email,
+                phone: data.phone,
+                message: data.message,
+                subject: data.subject,
+                date: new Date().toISOString()
+            };
+            
+            messages.push(message);
+            localStorage.setItem('lussinkz_messages', JSON.stringify(messages));
+            
+            showNotification('¡Mensaje enviado! Te responderemos a la brevedad.', 'success');
+            event.target.reset();
+        });
+    }
+});
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
     
