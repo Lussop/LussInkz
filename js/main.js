@@ -1178,7 +1178,7 @@ function handlePasswordReset(event) {
             
             console.log('Intentando con parámetros mínimos:', minimalParams);
             
-            emailjs.send("service_w8p6kjj", "template_lnm3nafc", minimalParams)
+            emailjs.send("service_w8p6kjj", "template_q34i8wg", minimalParams)
             .then(function(response) {
                 console.log("✅ Email enviado exitosamente!", response.status, response.text);
                 showPasswordResetSuccess();
