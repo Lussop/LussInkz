@@ -1169,7 +1169,16 @@ function handlePasswordReset(event) {
             console.log('Service ID: service_w8p6kjj');
             console.log('Template ID: template_lnm3nafc');
             
-            emailjs.send("service_w8p6kjj", "template_lnm3nafc", templateParams)
+            // Try with minimal parameters first
+            const minimalParams = {
+                to_email: email,
+                to_name: user.name || "Cliente",
+                reset_link: resetLink
+            };
+            
+            console.log('Intentando con parámetros mínimos:', minimalParams);
+            
+            emailjs.send("service_w8p6kjj", "template_lnm3nafc", minimalParams)
             .then(function(response) {
                 console.log("✅ Email enviado exitosamente!", response.status, response.text);
                 showPasswordResetSuccess();
@@ -1237,53 +1246,71 @@ function checkPasswordReset() {
 }
 
 function showNewPasswordForm(user) {
-    // Create a simple form for new password
+    console.log('🔑 Mostrando formulario de nueva contraseña para:', user.email);
+    
     const modal = document.getElementById('authModal');
+    if (!modal) {
+        console.error('❌ Modal no encontrado');
+        return;
+    }
+    
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
     
-    // Hide all forms and show reset form
-    document.getElementById('loginForm').classList.add('hidden');
-    document.getElementById('registerForm').classList.add('hidden');
-    document.getElementById('passwordResetForm').classList.add('hidden');
+    // Hide all forms
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const passwordResetForm = document.getElementById('passwordResetForm');
+    const passwordResetSuccess = document.getElementById('passwordResetSuccess');
+    
+    if (loginForm) loginForm.classList.add('hidden');
+    if (registerForm) registerForm.classList.add('hidden');
+    if (passwordResetForm) passwordResetForm.classList.add('hidden');
+    if (passwordResetSuccess) passwordResetSuccess.classList.add('hidden');
     
     // Create new password form
     const resetForm = document.getElementById('passwordResetForm');
-    resetForm.innerHTML = `
-        <div class="text-center mb-8">
-            <h2 class="text-3xl font-bold mb-2" style="color: var(--text-primary);">Nueva Contraseña</h2>
-            <p style="color: var(--text-secondary);">Ingresa tu nueva contraseña</p>
-        </div>
-        
-        <form onsubmit="handleNewPassword(event, '${user.email}')">
-            <div class="mb-4">
-                <label class="block mb-2 font-semibold" style="color: var(--text-primary);">Nueva Contraseña</label>
-                <input type="password" id="newPassword" required 
-                       class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none"
-                       style="background-color: var(--bg-primary); border-color: var(--border-color); color: var(--text-primary);"
-                       placeholder="Mínimo 6 caracteres">
+    if (resetForm) {
+        resetForm.innerHTML = `
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold mb-2" style="color: var(--text-primary);">Nueva Contraseña</h2>
+                <p style="color: var(--text-secondary);">Ingresa tu nueva contraseña</p>
             </div>
-            <div class="mb-4">
-                <label class="block mb-2 font-semibold" style="color: var(--text-primary);">Confirmar Contraseña</label>
-                <input type="password" id="confirmNewPassword" required 
-                       class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none"
-                       style="background-color: var(--bg-primary); border-color: var(--border-color); color: var(--text-primary);"
-                       placeholder="Repite tu nueva contraseña">
+            
+            <form onsubmit="handleNewPassword(event, '${user.email}')">
+                <div class="mb-4">
+                    <label class="block mb-2 font-semibold" style="color: var(--text-primary);">Nueva Contraseña</label>
+                    <input type="password" id="newPassword" required 
+                           class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none"
+                           style="background-color: var(--bg-primary); border-color: var(--border-color); color: var(--text-primary);"
+                           placeholder="Mínimo 6 caracteres">
+                </div>
+                <div class="mb-4">
+                    <label class="block mb-2 font-semibold" style="color: var(--text-primary);">Confirmar Contraseña</label>
+                    <input type="password" id="confirmNewPassword" required 
+                           class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none"
+                           style="background-color: var(--bg-primary); border-color: var(--border-color); color: var(--text-primary);"
+                           placeholder="Repite tu nueva contraseña">
+                </div>
+                <button type="submit" class="w-full py-3 rounded-lg font-semibold transition-all duration-300"
+                        style="background: linear-gradient(135deg, var(--accent-color) 0%, #cc0000 100%); color: white;">
+                    <i class="fas fa-check mr-2"></i>Actualizar Contraseña
+                </button>
+            </form>
+            
+            <div class="text-center mt-6">
+                <p style="color: var(--text-secondary);">
+                    <a href="#" onclick="showLoginForm()" class="font-semibold" style="color: var(--accent-color);">
+                        <i class="fas fa-arrow-left mr-2"></i>Volver al Login
+                    </a>
+                </p>
             </div>
-            <button type="submit" class="w-full py-3 rounded-lg font-semibold transition-all duration-300"
-                    style="background: linear-gradient(135deg, var(--accent-color) 0%, #cc0000 100%); color: white;">
-                <i class="fas fa-check mr-2"></i>Actualizar Contraseña
-            </button>
-        </form>
-        
-        <div class="text-center mt-6">
-            <p style="color: var(--text-secondary);">
-                <a href="#" onclick="showLoginForm()" class="font-semibold" style="color: var(--accent-color);">
-                    <i class="fas fa-arrow-left mr-2"></i>Volver al Login
-                </a>
-            </p>
-        </div>
-    `;
+        `;
+        resetForm.classList.remove('hidden');
+        console.log('✅ Formulario de nueva contraseña creado y mostrado');
+    } else {
+        console.error('❌ passwordResetForm no encontrado');
+    }
 }
 
 function handleNewPassword(event, email) {
