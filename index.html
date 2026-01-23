@@ -1038,15 +1038,66 @@
         }
 
         /* Dark mode modal content */
-        [data-theme="dark"] .modal-content {
-            background: var(--card-bg) !important;
+        [data-theme="dark"] .modal-content,
+        body.dark-mode .modal-content {
+            background: var(--bg-primary) !important;
             color: var(--text-primary) !important;
         }
 
         [data-theme="dark"] .modal h2,
         [data-theme="dark"] .modal h3,
-        [data-theme="dark"] .modal p {
+        [data-theme="dark"] .modal p,
+        [data-theme="dark"] .modal .text-gray-600,
+        [data-theme="dark"] .modal .text-gray-700,
+        body.dark-mode .modal h2,
+        body.dark-mode .modal h3,
+        body.dark-mode .modal p,
+        body.dark-mode .modal .text-gray-600,
+        body.dark-mode .modal .text-gray-700 {
             color: var(--text-primary) !important;
+        }
+
+        [data-theme="dark"] .modal .text-gray-500,
+        [data-theme="dark"] .modal .text-gray-700,
+        body.dark-mode .modal .text-gray-500,
+        body.dark-mode .modal .text-gray-700 {
+            color: var(--text-secondary) !important;
+        }
+
+        /* Product modal specific dark mode */
+        [data-theme="dark"] #productModal .modal-content,
+        body.dark-mode #productModal .modal-content {
+            background: var(--bg-primary) !important;
+            color: var(--text-primary) !important;
+        }
+
+        [data-theme="dark"] #productModal h2,
+        [data-theme="dark"] #productModal h3,
+        [data-theme="dark"] #productModal p,
+        [data-theme="dark"] #productModal .text-gray-600,
+        [data-theme="dark"] #productModal .text-gray-700,
+        body.dark-mode #productModal h2,
+        body.dark-mode #productModal h3,
+        body.dark-mode #productModal p,
+        body.dark-mode #productModal .text-gray-600,
+        body.dark-mode #productModal .text-gray-700 {
+            color: var(--text-primary) !important;
+        }
+
+        [data-theme="dark"] #productModal .size-btn,
+        body.dark-mode #productModal .size-btn {
+            background: var(--bg-secondary) !important;
+            color: var(--text-primary) !important;
+            border: 2px solid var(--border-color) !important;
+        }
+
+        [data-theme="dark"] #productModal .size-btn:hover,
+        [data-theme="dark"] #productModal .size-btn.selected,
+        body.dark-mode #productModal .size-btn:hover,
+        body.dark-mode #productModal .size-btn.selected {
+            background: var(--accent-color) !important;
+            color: white !important;
+            border-color: var(--accent-color) !important;
         }
 
         /* Dark mode form inputs */
