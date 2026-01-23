@@ -994,16 +994,29 @@ function openProductModal(productId) {
     currentQuantity = 1;
     document.getElementById('quantity').textContent = '1';
     
-    // Update size buttons
-    const sizeButtons = document.querySelectorAll('.size-btn');
-    sizeButtons.forEach(btn => {
-        btn.classList.remove('selected');
-        if (product.sizes && product.sizes.includes(btn.dataset.size)) {
-            btn.style.display = 'inline-block';
-        } else {
-            btn.style.display = 'none';
-        }
-    });
+    // Update size buttons dynamically
+    const sizeSelector = document.getElementById('sizeSelector');
+    if (sizeSelector && product.sizes) {
+        // Clear existing size buttons
+        sizeSelector.innerHTML = '';
+        
+        // Create size buttons based on product sizes
+        product.sizes.forEach(size => {
+            const sizeBtn = document.createElement('button');
+            sizeBtn.className = 'size-btn';
+            sizeBtn.setAttribute('data-size', size);
+            sizeBtn.textContent = size;
+            sizeBtn.onclick = function() {
+                // Remove selected class from all size buttons
+                document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+                // Add selected class to clicked button
+                sizeBtn.classList.add('selected');
+                // Set selected size
+                selectedSize = size;
+            };
+            sizeSelector.appendChild(sizeBtn);
+        });
+    }
     
     // Show modal
     modal.classList.add('active');
