@@ -994,33 +994,44 @@ function openProductModal(productId) {
     currentQuantity = 1;
     document.getElementById('quantity').textContent = '1';
     
-    // Update size buttons dynamically
-    const sizeSelector = document.getElementById('sizeSelector');
-    if (sizeSelector && product.sizes) {
-        // Clear existing size buttons
-        sizeSelector.innerHTML = '';
-        
-        // Create size buttons based on product sizes
-        product.sizes.forEach(size => {
-            const sizeBtn = document.createElement('button');
-            sizeBtn.className = 'size-btn';
-            sizeBtn.setAttribute('data-size', size);
-            sizeBtn.textContent = size;
-            sizeBtn.onclick = function() {
-                // Remove selected class from all size buttons
-                document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
-                // Add selected class to clicked button
-                sizeBtn.classList.add('selected');
-                // Set selected size
-                selectedSize = size;
-            };
-            sizeSelector.appendChild(sizeBtn);
-        });
-    }
-    
-    // Show modal
+    // Show modal first
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
+    
+    // Then update size buttons dynamically
+    setTimeout(() => {
+        const sizeSelector = document.getElementById('sizeSelector');
+        console.log('🔍 Buscando sizeSelector:', sizeSelector);
+        console.log('👕 Tallas del producto:', product.sizes);
+        
+        if (sizeSelector && product.sizes) {
+            console.log('✅ sizeSelector encontrado, creando botones...');
+            // Clear existing size buttons
+            sizeSelector.innerHTML = '';
+            
+            // Create size buttons based on product sizes
+            product.sizes.forEach(size => {
+                console.log('📏 Creando botón para talla:', size);
+                const sizeBtn = document.createElement('button');
+                sizeBtn.className = 'size-btn';
+                sizeBtn.setAttribute('data-size', size);
+                sizeBtn.textContent = size;
+                sizeBtn.onclick = function() {
+                    // Remove selected class from all size buttons
+                    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+                    // Add selected class to clicked button
+                    sizeBtn.classList.add('selected');
+                    // Set selected size
+                    selectedSize = size;
+                    console.log('✅ Talla seleccionada:', size);
+                };
+                sizeSelector.appendChild(sizeBtn);
+            });
+            console.log('✅ Botones de talla creados:', sizeSelector.children.length);
+        } else {
+            console.error('❌ No se encontró sizeSelector o el producto no tiene tallas');
+        }
+    }, 100); // Small delay to ensure modal is rendered
 }
 
 function changeModalImage(imageSrc) {
