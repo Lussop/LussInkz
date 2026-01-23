@@ -2019,17 +2019,7 @@ function deleteAccount() {
     }
 }
 
-function showOrders() {
-    showNotification('Historial de pedidos en desarrollo', 'info');
-}
 
-function showFavorites() {
-    showNotification('Favoritos en desarrollo', 'info');
-}
-
-function showSettings() {
-    showNotification('Configuración en desarrollo', 'info');
-}
 
 // Admin Functions
 function showAddProduct() {
