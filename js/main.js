@@ -1169,23 +1169,14 @@ function handlePasswordReset(event) {
             console.log('🔧 Service ID: service_w8p6kjj');
             console.log('📝 Template ID: template_v4k020w');
             
-            // Try with common parameter names
+            // Try with the most basic EmailJS template structure
             const minimalParams = {
-                email: email,
                 to_email: email,
-                recipient_email: email,
-                to: email,
-                name: user.name || "Cliente",
                 to_name: user.name || "Cliente",
-                recipient_name: user.name || "Cliente",
-                from_name: "LussInkz",
-                message: resetLink,
-                reset_link: resetLink,
-                link: resetLink,
-                url: resetLink
+                message: `Hola ${user.name || "Cliente"},\n\nRecibimos una solicitud para restablecer tu contraseña.\n\nHaz clic en este enlace para crear una nueva contraseña:\n${resetLink}\n\nEste enlace expirará en 1 hora.\n\nSi no solicitaste esto, ignora este email.\n\nGracias,\nEquipo LussInkz`
             };
             
-            console.log('⚡ Intentando con TODAS las variables posibles:', minimalParams);
+            console.log('⚡ Enviando con estructura básica:', minimalParams);
             console.log('🚀 Enviando a EmailJS...');
             
             emailjs.send("service_w8p6kjj", "template_v4k020w", minimalParams)
