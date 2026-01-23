@@ -1664,7 +1664,327 @@ function loadAdminMessages() {
 
 // User Functions
 function showProfile() {
-    showNotification('Perfil de usuario en desarrollo', 'info');
+    if (!currentUser) {
+        showNotification('Debes iniciar sesión para ver tu perfil', 'error');
+        openAuthModal();
+        return;
+    }
+    
+    // Create profile modal
+    const modal = document.getElementById('authModal');
+    if (!modal) return;
+    
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Hide all forms
+    document.getElementById('loginForm').classList.add('hidden');
+    document.getElementById('registerForm').classList.add('hidden');
+    document.getElementById('passwordResetForm').classList.add('hidden');
+    document.getElementById('passwordResetSuccess').classList.add('hidden');
+    
+    // Create profile content
+    const resetForm = document.getElementById('passwordResetForm');
+    resetForm.innerHTML = `
+        <div class="text-center mb-8">
+            <div class="mb-4">
+                <div class="w-24 h-24 mx-auto bg-gradient-to-r from-red-500 to-red-700 rounded-full flex items-center justify-center text-white text-3xl font-bold">
+                    ${currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
+                </div>
+            </div>
+            <h2 class="text-3xl font-bold mb-2" style="color: var(--text-primary);">Mi Perfil</h2>
+            <p style="color: var(--text-secondary);">Gestiona tu información personal</p>
+        </div>
+        
+        <div class="space-y-4">
+            <div class="p-4 rounded-lg" style="background-color: var(--bg-secondary);">
+                <label class="block text-sm font-semibold mb-2" style="color: var(--text-secondary);">Nombre Completo</label>
+                <p style="color: var(--text-primary);">${currentUser.name} ${currentUser.surname || ''}</p>
+            </div>
+            
+            <div class="p-4 rounded-lg" style="background-color: var(--bg-secondary);">
+                <label class="block text-sm font-semibold mb-2" style="color: var(--text-secondary);">Email</label>
+                <p style="color: var(--text-primary);">${currentUser.email}</p>
+            </div>
+            
+            <div class="p-4 rounded-lg" style="background-color: var(--bg-secondary);">
+                <label class="block text-sm font-semibold mb-2" style="color: var(--text-secondary);">Teléfono</label>
+                <p style="color: var(--text-primary);">${currentUser.phone || 'No especificado'}</p>
+            </div>
+            
+            <div class="p-4 rounded-lg" style="background-color: var(--bg-secondary);">
+                <label class="block text-sm font-semibold mb-2" style="color: var(--text-secondary);">Miembro desde</label>
+                <p style="color: var(--text-primary);">${new Date(currentUser.registeredAt).toLocaleDateString('es-AR')}</p>
+            </div>
+        </div>
+        
+        <div class="text-center mt-6">
+            <button onclick="closeAuthModal()" class="w-full py-3 rounded-lg font-semibold transition-all duration-300"
+                    style="background: linear-gradient(135deg, var(--accent-color) 0%, #cc0000 100%); color: white;">
+                <i class="fas fa-times mr-2"></i>Cerrar
+            </button>
+        </div>
+    `;
+    resetForm.classList.remove('hidden');
+}
+
+function showOrders() {
+    if (!currentUser) {
+        showNotification('Debes iniciar sesión para ver tus pedidos', 'error');
+        openAuthModal();
+        return;
+    }
+    
+    // Get user orders
+    const userOrders = orders.filter(order => order.userId === currentUser.id);
+    
+    // Create orders modal
+    const modal = document.getElementById('authModal');
+    if (!modal) return;
+    
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Hide all forms
+    document.getElementById('loginForm').classList.add('hidden');
+    document.getElementById('registerForm').classList.add('hidden');
+    document.getElementById('passwordResetForm').classList.add('hidden');
+    document.getElementById('passwordResetSuccess').classList.add('hidden');
+    
+    // Create orders content
+    const resetForm = document.getElementById('passwordResetForm');
+    resetForm.innerHTML = `
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold mb-2" style="color: var(--text-primary);">Mis Pedidos</h2>
+            <p style="color: var(--text-secondary);">Historial de tus compras</p>
+        </div>
+        
+        <div class="space-y-4">
+            ${userOrders.length === 0 ? 
+                `<div class="text-center py-8" style="color: var(--text-secondary);">
+                    <i class="fas fa-shopping-bag text-4xl mb-4"></i>
+                    <p>No tienes pedidos aún</p>
+                </div>` :
+                userOrders.map(order => `
+                    <div class="p-4 rounded-lg border" style="background-color: var(--bg-secondary); border-color: var(--border-color);">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <p class="font-semibold" style="color: var(--text-primary);">Orden #${order.id}</p>
+                                <p class="text-sm" style="color: var(--text-secondary);">${new Date(order.date).toLocaleDateString('es-AR')}</p>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold ${
+                                order.status === 'completed' ? 'bg-green-100 text-green-800' :
+                                order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                'bg-gray-100 text-gray-800'
+                            }">
+                                ${order.status === 'completed' ? 'Completado' :
+                                  order.status === 'pending' ? 'Pendiente' : 'Procesando'}
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <p class="font-bold" style="color: var(--accent-color);">$${order.total.toLocaleString('es-AR')}</p>
+                            <p class="text-sm" style="color: var(--text-secondary);">${order.items.length} productos</p>
+                        </div>
+                    </div>
+                `).join('')
+            }
+        </div>
+        
+        <div class="text-center mt-6">
+            <button onclick="closeAuthModal()" class="w-full py-3 rounded-lg font-semibold transition-all duration-300"
+                    style="background: linear-gradient(135deg, var(--accent-color) 0%, #cc0000 100%); color: white;">
+                <i class="fas fa-times mr-2"></i>Cerrar
+            </button>
+        </div>
+    `;
+    resetForm.classList.remove('hidden');
+}
+
+function showFavorites() {
+    if (!currentUser) {
+        showNotification('Debes iniciar sesión para ver tus favoritos', 'error');
+        openAuthModal();
+        return;
+    }
+    
+    // Get user favorites
+    const userFavorites = currentUser.favorites || [];
+    const favoriteProducts = products.filter(product => userFavorites.includes(product.id));
+    
+    // Create favorites modal
+    const modal = document.getElementById('authModal');
+    if (!modal) return;
+    
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Hide all forms
+    document.getElementById('loginForm').classList.add('hidden');
+    document.getElementById('registerForm').classList.add('hidden');
+    document.getElementById('passwordResetForm').classList.add('hidden');
+    document.getElementById('passwordResetSuccess').classList.add('hidden');
+    
+    // Create favorites content
+    const resetForm = document.getElementById('passwordResetForm');
+    resetForm.innerHTML = `
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold mb-2" style="color: var(--text-primary);">Mis Favoritos</h2>
+            <p style="color: var(--text-secondary);">Productos que te gustan</p>
+        </div>
+        
+        <div class="space-y-4 max-h-96 overflow-y-auto">
+            ${favoriteProducts.length === 0 ? 
+                `<div class="text-center py-8" style="color: var(--text-secondary);">
+                    <i class="fas fa-heart text-4xl mb-4"></i>
+                    <p>No tienes productos favoritos aún</p>
+                </div>` :
+                favoriteProducts.map(product => `
+                    <div class="flex items-center gap-4 p-4 rounded-lg" style="background-color: var(--bg-secondary);">
+                        <img src="${product.image}" alt="${product.name}" class="w-16 h-16 object-cover rounded">
+                        <div class="flex-1">
+                            <h4 class="font-semibold" style="color: var(--text-primary);">${product.name}</h4>
+                            <p class="font-bold" style="color: var(--accent-color);">$${product.price.toLocaleString('es-AR')}</p>
+                        </div>
+                        <button onclick="removeFromFavorites(${product.id})" class="text-red-500 hover:text-red-700">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `).join('')
+            }
+        </div>
+        
+        <div class="text-center mt-6">
+            <button onclick="closeAuthModal()" class="w-full py-3 rounded-lg font-semibold transition-all duration-300"
+                    style="background: linear-gradient(135deg, var(--accent-color) 0%, #cc0000 100%); color: white;">
+                <i class="fas fa-times mr-2"></i>Cerrar
+            </button>
+        </div>
+    `;
+    resetForm.classList.remove('hidden');
+}
+
+function showSettings() {
+    if (!currentUser) {
+        showNotification('Debes iniciar sesión para acceder a la configuración', 'error');
+        openAuthModal();
+        return;
+    }
+    
+    // Create settings modal
+    const modal = document.getElementById('authModal');
+    if (!modal) return;
+    
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Hide all forms
+    document.getElementById('loginForm').classList.add('hidden');
+    document.getElementById('registerForm').classList.add('hidden');
+    document.getElementById('passwordResetForm').classList.add('hidden');
+    document.getElementById('passwordResetSuccess').classList.add('hidden');
+    
+    // Create settings content
+    const resetForm = document.getElementById('passwordResetForm');
+    resetForm.innerHTML = `
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold mb-2" style="color: var(--text-primary);">Configuración</h2>
+            <p style="color: var(--text-secondary);">Gestiona tu cuenta</p>
+        </div>
+        
+        <div class="space-y-4">
+            <button onclick="showPasswordReset()" class="w-full p-4 rounded-lg text-left transition-all duration-300 hover:bg-opacity-80"
+                    style="background-color: var(--bg-secondary);">
+                <i class="fas fa-key mr-3" style="color: var(--accent-color);"></i>
+                <span style="color: var(--text-primary);">Cambiar Contraseña</span>
+            </button>
+            
+            <button onclick="exportUserData()" class="w-full p-4 rounded-lg text-left transition-all duration-300 hover:bg-opacity-80"
+                    style="background-color: var(--bg-secondary);">
+                <i class="fas fa-download mr-3" style="color: var(--accent-color);"></i>
+                <span style="color: var(--text-primary);">Exportar Mis Datos</span>
+            </button>
+            
+            <button onclick="deleteAccount()" class="w-full p-4 rounded-lg text-left transition-all duration-300 hover:bg-opacity-80"
+                    style="background-color: var(--bg-secondary);">
+                <i class="fas fa-trash-alt mr-3 text-red-500"></i>
+                <span class="text-red-500">Eliminar Cuenta</span>
+            </button>
+        </div>
+        
+        <div class="text-center mt-6">
+            <button onclick="closeAuthModal()" class="w-full py-3 rounded-lg font-semibold transition-all duration-300"
+                    style="background: linear-gradient(135deg, var(--accent-color) 0%, #cc0000 100%); color: white;">
+                <i class="fas fa-times mr-2"></i>Cerrar
+            </button>
+        </div>
+    `;
+    resetForm.classList.remove('hidden');
+}
+
+function removeFromFavorites(productId) {
+    if (!currentUser) return;
+    
+    currentUser.favorites = currentUser.favorites.filter(id => id !== productId);
+    
+    // Update users array
+    const userIndex = users.findIndex(u => u.id === currentUser.id);
+    if (userIndex !== -1) {
+        users[userIndex].favorites = currentUser.favorites;
+        localStorage.setItem('lussinkz_users', JSON.stringify(users));
+    }
+    
+    // Update session
+    localStorage.setItem('lussinkz_session', JSON.stringify(currentUser));
+    
+    showFavorites(); // Refresh the favorites view
+    showNotification('Producto eliminado de favoritos', 'info');
+}
+
+function exportUserData() {
+    if (!currentUser) return;
+    
+    const userData = {
+        profile: {
+            name: currentUser.name,
+            surname: currentUser.surname,
+            email: currentUser.email,
+            phone: currentUser.phone,
+            registeredAt: currentUser.registeredAt
+        },
+        favorites: currentUser.favorites || [],
+        orders: orders.filter(order => order.userId === currentUser.id)
+    };
+    
+    const dataStr = JSON.stringify(userData, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    
+    const exportFileDefaultName = `lussinkz_data_${currentUser.email}_${new Date().toISOString().split('T')[0]}.json`;
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+    
+    showNotification('Datos exportados correctamente', 'success');
+}
+
+function deleteAccount() {
+    if (!currentUser) return;
+    
+    if (confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.')) {
+        // Remove user from users array
+        users = users.filter(u => u.id !== currentUser.id);
+        localStorage.setItem('lussinkz_users', JSON.stringify(users));
+        
+        // Remove user's orders
+        orders = orders.filter(order => order.userId !== currentUser.id);
+        localStorage.setItem('lussinkz_orders', JSON.stringify(orders));
+        
+        // Logout
+        logout();
+        
+        showNotification('Tu cuenta ha sido eliminada', 'info');
+    }
 }
 
 function showOrders() {
