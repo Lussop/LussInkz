@@ -1052,7 +1052,9 @@ if (users.length === 0) {
             phone: '2995123456',
             role: 'user',
             isActive: true,
-            registeredAt: new Date().toISOString()
+            registeredAt: new Date().toISOString(),
+            favorites: [],
+            orders: []
         },
         {
             id: 2,
@@ -1063,11 +1065,28 @@ if (users.length === 0) {
             phone: '2995987654',
             role: 'admin',
             isActive: true,
-            registeredAt: new Date().toISOString()
+            registeredAt: new Date().toISOString(),
+            favorites: [],
+            orders: []
+        },
+        {
+            id: 3,
+            name: 'Rodrigo',
+            surname: 'Ezequiel',
+            email: 'xrodrice@gmail.com',
+            password: '123456',
+            phone: '2995123457',
+            role: 'user',
+            isActive: true,
+            registeredAt: new Date().toISOString(),
+            favorites: [],
+            orders: []
         }
     ];
     localStorage.setItem('lussinkz_users', JSON.stringify(users));
     console.log('✅ Usuarios de prueba creados:', users);
+} else {
+    console.log('👥 Usuarios existentes:', users.map(u => ({email: u.email, name: u.name, role: u.role})));
 }
 let orders = JSON.parse(localStorage.getItem('lussinkz_orders')) || [];
 let messages = JSON.parse(localStorage.getItem('lussinkz_messages')) || [];
@@ -1497,26 +1516,39 @@ function logout() {
 }
 
 function updateUserUI() {
+    console.log('🔄 Actualizando UI de usuario, currentUser:', currentUser);
+    
     const userMenu = document.getElementById('userMenu');
     const authBtn = document.querySelector('.auth-btn');
     
     if (currentUser) {
+        console.log('✅ Usuario logueado, mostrando menú');
         // Show user menu
-        userMenu.classList.remove('hidden');
-        document.getElementById('userName').textContent = currentUser.name;
+        if (userMenu) {
+            userMenu.classList.remove('hidden');
+            const userNameElement = document.getElementById('userName');
+            if (userNameElement) {
+                userNameElement.textContent = currentUser.name;
+            }
+        } else {
+            console.error('❌ userMenu no encontrado');
+        }
         
         // Hide auth button
         if (authBtn) {
             authBtn.style.display = 'none';
         }
     } else {
+        console.log('❌ No hay usuario logueado, mostrando botón de auth');
         // Show auth button
         if (authBtn) {
             authBtn.style.display = 'flex';
         }
         
         // Hide user menu
-        userMenu.classList.add('hidden');
+        if (userMenu) {
+            userMenu.classList.add('hidden');
+        }
     }
 }
 
