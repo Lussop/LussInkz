@@ -1169,17 +1169,23 @@ function handlePasswordReset(event) {
             console.log('🔧 Service ID: service_w8p6kjj');
             console.log('📝 Template ID: template_v4k020w');
             
-            // Try with different parameter names
+            // Try with common parameter names
             const minimalParams = {
+                email: email,
                 to_email: email,
+                recipient_email: email,
+                to: email,
+                name: user.name || "Cliente",
                 to_name: user.name || "Cliente",
+                recipient_name: user.name || "Cliente",
                 from_name: "LussInkz",
                 message: resetLink,
                 reset_link: resetLink,
-                link: resetLink
+                link: resetLink,
+                url: resetLink
             };
             
-            console.log('⚡ Intentando con parámetros extendidos:', minimalParams);
+            console.log('⚡ Intentando con TODAS las variables posibles:', minimalParams);
             console.log('🚀 Enviando a EmailJS...');
             
             emailjs.send("service_w8p6kjj", "template_v4k020w", minimalParams)
